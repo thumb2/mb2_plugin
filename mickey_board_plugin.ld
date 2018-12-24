@@ -40,7 +40,9 @@ SECTIONS
         *(COMMON)
         . = ALIGN(4);
         __bss_end__ = .;
+        end = .;
     } > RAM
+    
 }
 
 

@@ -24,6 +24,18 @@ copy_loop:
     bgt copy_loop
 
 copy_done:
+    ldr r2, =__bss_start__    
+    ldr r3, =__bss_end__
+    
+    subs r3, r2
+    ble clear_done
+    movs r0, 0    
+clear_loop:
+    subs r3, #4
+    str r0, [r2,r3]
+    bgt clear_loop
+    
+clear_done: 
     pop {r0, r1}    
     push {lr}
     bl plugin_init
