@@ -9,16 +9,12 @@
 plugin_api_type_def* api;
 plugin_cb_type_def plugin_cb;
 
-const uint32_t drive_pins[DRIVE_PIN_NUM] = {13, 28, 23, 7, 22, 11, 14, 15, 16};
-const uint32_t sense_pins[SENSE_PIN_NUM] = {24, 21, 1, 2, 8, 17, 9, 18, 10, 19};
 
 #define GPIO_DRIVE_SNOOZE_MODE 0x0000000C
 #define GPIO_SENSE_SNOOZE_MODE 0x00020000
 #define GPIO_DRIVE_SCAN_MODE   0x00000001
 #define GPIO_SENSE_SCAN_MODE   0x00000004
 
-#define DRIVE_PIN_NUM          9
-#define SENSE_PIN_NUM          10
 
 #define GPIO_BASE              0x50000000UL
 #define GPIO_OUT               (*((uint32_t volatile*)(GPIO_BASE + 0x504)))
@@ -38,9 +34,13 @@ const uint32_t sense_pins[SENSE_PIN_NUM] = {24, 21, 1, 2, 8, 17, 9, 18, 10, 19};
 #define GPIOTE_INTENSET        (*((uint32_t volatile*)(GPIOTE_BASE + 0x0304)))
 #define GPIOTE_PORT            (*((uint32_t volatile*)(GPIOTE_BASE + 0x017C)))
 #define GPIOTE_PORT_INTEN      31UL
+#define DRIVE_PIN_NUM          9
+#define SENSE_PIN_NUM          10
 #define DRIVE_MASK_NUM         7
 #define SENSE_MASK_NUM         10
 
+const uint32_t drive_pins[DRIVE_PIN_NUM] = {13, 28, 23, 7, 22, 11, 14, 15, 16};
+const uint32_t sense_pins[SENSE_PIN_NUM] = {24, 21, 1, 2, 8, 17, 9, 18, 10, 19};
 const uint32_t drive_mask[DRIVE_MASK_NUM + 1] = {
     0x10002000,
     0x00800080,
@@ -179,7 +179,6 @@ void debounce_timer_timeout_handler(void *p)
 int plugin_init(plugin_init_struct_t *plugin_init)
 {
     api = plugin_init->api;
-    plugin_cb.timeout_handler = timeout_handler;
     plugin_cb.gpioevt_handler = gpioevt_handler;    
     plugin_init->register_callback_func(&plugin_cb);
     api->timer_create(&debounce_timer, debounce_timer_timeout_handler);
